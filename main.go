@@ -5,13 +5,14 @@ import (
 	"log"
 	"net/http"
 	"samla-admin/api"
+	"samla-admin/auth"
 	"time"
 )
 
 func main() {
 	http.HandleFunc("/", welcome)
 
-	http.HandleFunc("/organizations", api.GetAllOrganizations) // GET: All organizations
+	http.Handle("/organizations", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllOrganizations))) // GET: All organizations
 
 	server := &http.Server{
 		Addr:         ":8080",
