@@ -5,16 +5,27 @@ import (
 	"log"
 	"net/http"
 	"samla-admin/api"
+	"time"
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Welcome to Samla Admin!")
-	})
+	http.HandleFunc("/", welcome)
 
 	http.HandleFunc("/organizations", api.GetAllOrganizations) // GET: All organizations
 
-	port := ":8080"
-	fmt.Printf("Server starting on port %s\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	server := &http.Server{
+		Addr:         ":8080",
+		Handler:      http.DefaultServeMux,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
+	fmt.Printf("Starting Samla Admin API on port 8080...\n")
+	log.Fatal(server.ListenAndServe())
+}
+
+func welcome(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Welcome to Sarah AI Call Assistant!"))
 }
