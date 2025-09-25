@@ -1,0 +1,47 @@
+# Compiled binaries and test results
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go build artifacts
+bin/
+build/
+dist/
+coverage/
+cover.out
+
+# Vendor dependencies (if vendoring is used)
+vendor/
+
+# Profiling data
+*.pprof
+.pprof
+
+# Logs and temp files
+*.log
+logs/
+tmp/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor/IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Node (if present in tooling)
+node_modules/
+
+# Git helpers
+.git-credentials
