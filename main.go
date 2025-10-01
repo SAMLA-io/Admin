@@ -12,7 +12,8 @@ import (
 func main() {
 	http.HandleFunc("/", welcome)
 
-	http.Handle("/organizations", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllOrganizations))) // GET: All organizations
+	http.Handle("/organizations/all", auth.TestingMiddleware(http.HandlerFunc(api.GetAllOrganizations)))   // GET: All organizations
+	http.Handle("/organizations/create", auth.TestingMiddleware(http.HandlerFunc(api.CreateOrganization))) // POST: Create organization
 
 	server := &http.Server{
 		Addr:         ":8080",
