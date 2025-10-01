@@ -101,6 +101,25 @@ func VerifyingMiddleware(next http.Handler) http.Handler {
 	}))
 }
 
+func TestingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("[AUTH] Request: %s %s from %s", r.Method, r.URL.Path, r.RemoteAddr)
+		startTime := time.Now()
+
+		organizationID := "org_1234"
+		userID := "user_123"
+
+		// Add organization ID to request context
+		ctx := context.WithValue(r.Context(), OrganizationIDKey{}, organizationID)
+		r = r.WithContext(ctx)
+
+		// Wrap the response writer to capture the status code
+		rw := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
+		next.ServeHTTP(rw, r)
+		log.Printf("[AUTH] Response: %s %s -> STATUS: %d completed in %v (User: %s, Org: %s)", r.Method, r.URL.Path, rw.statusCode, time.Since(startTime), userID, organizationID)
+	})
+}
+
 // extractUserIDFromAuthHeader extracts the user ID from the Authorization header
 func extractUserIDFromAuthHeader(req *http.Request) (string, error) {
 	authHeader := req.Header.Get("Authorization")
