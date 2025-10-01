@@ -20,3 +20,25 @@ func GetAllOrganizations(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(organizations)
 }
+
+func CreateOrganization(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"POST"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	organization, err := ExtractOrganizationCreateRequest(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	createdOrganization, err := clerk.CreateOrganization(organization)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(createdOrganization)
+
+}

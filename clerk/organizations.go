@@ -99,3 +99,12 @@ func UpdateOrganizationPublicMetadata(organizationId string, metadata map[string
 
 	return err
 }
+
+func CreateOrganization(newOrganization organization.CreateParams) (clerk.Organization, error) {
+	organization, err := organization.Create(context.Background(), &newOrganization)
+	if err != nil {
+		return clerk.Organization{}, err
+	}
+
+	return *organization, nil
+}
