@@ -12,10 +12,10 @@ import (
 func main() {
 	http.HandleFunc("/", welcome)
 
-	http.Handle("/organizations/all", auth.TestingMiddleware(http.HandlerFunc(api.GetAllOrganizations)))   // GET: All organizations
-	http.Handle("/organizations/create", auth.TestingMiddleware(http.HandlerFunc(api.CreateOrganization))) // POST: Create organization
-	http.Handle("/organizations/update", auth.TestingMiddleware(http.HandlerFunc(api.UpdateOrganization))) // PATCH: Update organization
-	http.Handle("/organizations/delete", auth.TestingMiddleware(http.HandlerFunc(api.DeleteOrganization))) // DELETE: Delete organization
+	http.Handle("/organizations/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllOrganizations)))   // GET: All organizations
+	http.Handle("/organizations/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateOrganization))) // POST: Create organization
+	http.Handle("/organizations/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateOrganization))) // PATCH: Update organization
+	http.Handle("/organizations/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteOrganization))) // DELETE: Delete organization
 
 	server := &http.Server{
 		Addr:         ":8080",
