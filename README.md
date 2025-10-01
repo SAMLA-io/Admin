@@ -31,9 +31,7 @@ The API will be available at `http://localhost:8080`.
 
 ### Organizations
 
-```bash
-GET /organizations
-```
+#### Get /organizations/all
 
 Returns all organizations.
 
@@ -64,7 +62,103 @@ Returns all organizations.
 }
 ```
 
+#### Post /organizations/create
 
+Creates a new organization.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Request Body:**
+
+```json
+{
+    "name": "Organization 1",
+    "slug": "Organization-1",
+    "max_allowed_memberships": 1,
+    "admin_delete_enabled": true,
+    "public_metadata": {},
+    "private_metadata": {}
+}
+```
+
+**Response:**
+
+```json
+    {
+        "object": "organization",
+        "id": "org_123",
+        "name": "Organization 1",
+        "slug": "Organization-1",
+        "image_url": "",
+        "has_image": true,
+        "max_allowed_memberships": 1,
+        "admin_delete_enabled": true,
+        "public_metadata": {},
+        "private_metadata": {},
+        "created_by": "user_1234",
+        "created_at": 1754520218386,
+        "updated_at": 1754520219401,
+    }
+```
+
+#### PATCH /organizations/update
+
+Updates an organization.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Query Parameters:**
+- organization_id: The ID of the organization to update
+
+**Request Body:**
+
+```json
+{
+    "name": "Organization 1",
+    "slug": "Organization-1",
+    "max_allowed_memberships": 1,
+    "admin_delete_enabled": true,
+    "public_metadata": {},
+    "private_metadata": {}
+}
+```
+
+**Response:**
+
+```json
+    {
+        "object": "organization",
+        "id": "org_123",
+        "name": "Organization 1",
+        "slug": "Organization-1",
+        "image_url": "",
+        "has_image": true,
+        "max_allowed_memberships": 1,
+        "admin_delete_enabled": true,
+        "public_metadata": {},
+        "private_metadata": {},
+        "created_by": "user_1234",
+        "created_at": 1754520218386,
+        "updated_at": 1754520219401,
+    }
+```
+
+#### DELETE /organizations/delete
+
+Deletes an organization.
+
+**Query Parameters:**
+- organization_id: The ID of the organization to delete
+
+**Response:**
+
+```json
+{
+    "message": "Organization org_123 deleted successfully"
+}
+```
 
 ## License
 
