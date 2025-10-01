@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"strings"
@@ -30,4 +31,26 @@ func ExtractOrganizationCreateRequest(r *http.Request) (organization.CreateParam
 	}
 
 	return organization, nil
+}
+
+func ExtractOrganizationUpdateRequest(r *http.Request) (organization.UpdateParams, error) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		return organization.UpdateParams{}, err
+	}
+
+	var updateRequest organization.UpdateParams
+	if err := json.Unmarshal(body, &updateRequest); err != nil {
+		return updateRequest, err
+	}
+
+	return updateRequest, nil
+}
+
+func ExtractOrganizationId(r *http.Request) (string, error) {
+	organizationId := r.URL.Query().Get("organization_id")
+	if organizationId == "" {
+		return "", errors.New("organization_id is required")
+	}
+	return strings.TrimSpace(organizationId), nil
 }
