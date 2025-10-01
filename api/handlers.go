@@ -69,3 +69,24 @@ func UpdateOrganization(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(updatedOrganization)
 }
+
+func DeleteOrganization(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"DELETE"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	organizationId, err := ExtractOrganizationId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = clerk.DeleteOrganization(organizationId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]string{"message": "Organization " + organizationId + " deleted successfully"})
+}

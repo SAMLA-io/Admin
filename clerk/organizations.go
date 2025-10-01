@@ -109,6 +109,7 @@ func UpdateOrganization(organizationId string, updateRequest organization.Update
 
 	return *organization, nil
 }
+
 func CreateOrganization(newOrganization organization.CreateParams) (clerk.Organization, error) {
 	organization, err := organization.Create(context.Background(), &newOrganization)
 	if err != nil {
@@ -116,4 +117,13 @@ func CreateOrganization(newOrganization organization.CreateParams) (clerk.Organi
 	}
 
 	return *organization, nil
+}
+
+func DeleteOrganization(organizationId string) error {
+	_, err := organization.Delete(context.Background(), organizationId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

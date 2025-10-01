@@ -15,6 +15,7 @@ func main() {
 	http.Handle("/organizations/all", auth.TestingMiddleware(http.HandlerFunc(api.GetAllOrganizations)))   // GET: All organizations
 	http.Handle("/organizations/create", auth.TestingMiddleware(http.HandlerFunc(api.CreateOrganization))) // POST: Create organization
 	http.Handle("/organizations/update", auth.TestingMiddleware(http.HandlerFunc(api.UpdateOrganization))) // PATCH: Update organization
+	http.Handle("/organizations/delete", auth.TestingMiddleware(http.HandlerFunc(api.DeleteOrganization))) // DELETE: Delete organization
 
 	server := &http.Server{
 		Addr:         ":8080",
