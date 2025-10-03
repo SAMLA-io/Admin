@@ -42,7 +42,7 @@ Returns all organizations.
 
 ```json
 {
-    "organizations": [
+    "data": [
         {
             "object": "organization",
             "id": "org_123",
@@ -58,7 +58,8 @@ Returns all organizations.
             "created_at": 1754520218386,
             "updated_at": 1754520219401,
         }
-    ]
+    ],
+    "total_count": 1
 }
 ```
 
