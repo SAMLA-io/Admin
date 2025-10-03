@@ -23,6 +23,9 @@ func main() {
 	http.Handle("/users/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateUser))) // PATCH: Update user
 	http.Handle("/users/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteUser))) // DELETE: Delete user
 
+	http.Handle("/invitations/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllInvitations)))   // GET: All invitations
+	http.Handle("/invitations/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateInvitation))) // POST: Create invitation
+
 	server := &http.Server{
 		Addr:         ":8080",
 		Handler:      http.DefaultServeMux,

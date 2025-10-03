@@ -199,3 +199,41 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(resource)
 }
+
+// =============================== INVITATIONS ===============================
+
+func GetAllInvitations(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"GET"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	invitations, err := clerk.GetAllInvitations()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(invitations)
+}
+
+func CreateInvitation(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"POST"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, err := ExtractUserId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	invitation, err := clerk.CreateInvitation(userId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(invitation)
+}
