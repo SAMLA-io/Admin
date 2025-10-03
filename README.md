@@ -160,6 +160,183 @@ Deletes an organization.
 }
 ```
 
+### Users
+
+#### Get /users/all
+Returns all users.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Response:**
+
+```json
+{
+    "data" : [
+        {
+            "object": "user",
+            "id": "user_123",
+            "first_name": "John",
+            "last_name": "Doe",
+            "email_addresses": [ 
+                "email_address": "john.doe@example.com"
+            ],
+            "username": "john.doe",
+            "profile_image_url": "",
+            "has_image": true,
+            "public_metadata": {},
+            "private_metadata": {},
+            "created_by": "user_1234",
+            "created_at": 1754520218386,
+            "updated_at": 1754520219401,
+        }
+    ],
+    "total_count": 1
+}
+```
+#### Get /users/get
+
+Returns a user.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Query Parameters:**
+- user_id: The ID of the user to get
+
+**Response:**
+
+```json
+    {
+        "object": "user",
+        "id": "user_123",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email_addresses": [ 
+            "email_address": "john.doe@example.com"
+        ],
+        "username": "john.doe",
+        "profile_image_url": "",
+        "has_image": true,
+        "public_metadata": {},
+        "private_metadata": {},
+        "created_by": "user_1234",
+        "created_at": 1754520218386,
+        "updated_at": 1754520219401,
+    }
+```
+
+#### POST /users/create
+
+Creates a new user.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Request Body:**
+
+```json
+    {
+        "username": "john.doe",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email_addresses": [ 
+            "email_address": "john.doe@example.com"
+        ],
+        "public_metadata": {},
+        "private_metadata": {},
+    }
+```
+
+**Response:**
+
+```json
+    {
+        "object": "user",
+        "id": "user_123",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email_addresses": [ 
+            "email_address": "john.doe@example.com"
+        ],
+        "username": "john.doe",
+        "profile_image_url": "",
+        "has_image": true,
+        "public_metadata": {},
+        "private_metadata": {},
+        "created_by": "user_1234",
+        "created_at": 1754520218386,
+        "updated_at": 1754520219401,
+    }
+```
+
+#### PATCH /users/update
+
+Updates a user.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Query Parameters:**
+- user_id: The ID of the user to update
+
+**Request Body:**
+
+```json
+    {
+        "username": "john.doe",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email_addresses": [ 
+            "email_address": "john.doe@example.com"
+        ],
+        "public_metadata": {},
+        "private_metadata": {},
+    }
+```
+
+**Response:**
+
+```json
+    {
+        "object": "user",
+        "id": "user_123",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email_addresses": [ 
+            "email_address": "john.doe@example.com"
+        ],
+        "username": "john.doe",
+        "profile_image_url": "",
+        "has_image": true,
+        "public_metadata": {},
+        "private_metadata": {},
+        "created_by": "user_1234",
+        "created_at": 1754520218386,
+        "updated_at": 1754520219401,
+    }
+```
+
+#### DELETE /users/delete
+
+Deletes a user.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Query Parameters:**
+- user_id: The ID of the user to delete
+
+**Response:**
+
+```json
+    {
+        "id": "user_123",
+        "object": "user",
+        "deleted": true
+    }
+```
+
 ## License
 
 This project is licensed under the a proprietary license. See the [LICENSE](LICENSE) file for details.
