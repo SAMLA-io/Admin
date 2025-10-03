@@ -337,6 +337,57 @@ Deletes a user.
     }
 ```
 
+### Invitations
+
+#### Get /invitations/all
+
+Returns all invitations.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Response:**
+
+```json
+{
+    "invitations": [
+        {
+            "id": "invitation_123",
+            "object": "invitation",
+            "email_address": "john.doe@example.com",
+            "status": "pending",
+            "created_at": 1754520218386,
+            "updated_at": 1754520219401,
+        }
+    ],
+    "total_count": 1
+}
+```
+
+#### POST /invitations/create
+
+Creates a new invitation.
+
+**Headers:**
+- Authorization: Bearer <JWT Token>
+
+**Query Parameters:**
+- user_id: The ID of the user to invite. The backend will get the email address from the user.
+
+**Response:**
+
+```json
+{
+    "id": "invitation_123",
+    "object": "invitation",
+    "email_address": "john.doe@example.com",
+    "status": "pending",
+    "created_at": 1754520218386,
+    "updated_at": 1754520219401,
+}
+```
+
+
 ## License
 
 This project is licensed under the a proprietary license. See the [LICENSE](LICENSE) file for details.
