@@ -18,6 +18,7 @@ func main() {
 	http.Handle("/organizations/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteOrganization))) // DELETE: Delete organization
 
 	http.Handle("/users/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllUsers)))   // GET: All users
+	http.Handle("/users/get", auth.VerifyingMiddleware(http.HandlerFunc(api.GetUser)))       // GET: Get user
 	http.Handle("/users/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateUser))) // POST: Create user
 	http.Handle("/users/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateUser))) // PATCH: Update user
 	http.Handle("/users/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteUser))) // DELETE: Delete user

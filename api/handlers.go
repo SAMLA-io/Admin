@@ -110,6 +110,27 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"GET"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, err := ExtractUserId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := clerk.GetUser(userId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(user)
+}
+
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	if !VerifyMethod(r, []string{"POST"}) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
