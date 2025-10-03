@@ -10,22 +10,21 @@ import (
 )
 
 func main() {
-	// Apply CORS middleware to all routes
-	http.HandleFunc("/", auth.CORSMiddleware(http.HandlerFunc(welcome)).ServeHTTP)
+	http.HandleFunc("/", welcome)
 
-	http.Handle("/organizations/all", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllOrganizations))))   // GET: All organizations
-	http.Handle("/organizations/create", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.CreateOrganization)))) // POST: Create organization
-	http.Handle("/organizations/update", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateOrganization)))) // PATCH: Update organization
-	http.Handle("/organizations/delete", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteOrganization)))) // DELETE: Delete organization
+	http.Handle("/organizations/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllOrganizations)))   // GET: All organizations
+	http.Handle("/organizations/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateOrganization))) // POST: Create organization
+	http.Handle("/organizations/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateOrganization))) // PATCH: Update organization
+	http.Handle("/organizations/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteOrganization))) // DELETE: Delete rganization
 
-	http.Handle("/users/all", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllUsers))))   // GET: All users
-	http.Handle("/users/get", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.GetUser))))       // GET: Get user
-	http.Handle("/users/create", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.CreateUser)))) // POST: Create user
-	http.Handle("/users/update", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateUser)))) // PATCH: Update user
-	http.Handle("/users/delete", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteUser)))) // DELETE: Delete user
+	http.Handle("/users/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllUsers)))   // GET: All users
+	http.Handle("/users/get", auth.VerifyingMiddleware(http.HandlerFunc(api.GetUser)))       // GET: Get user
+	http.Handle("/users/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateUser))) // POST: Create user
+	http.Handle("/users/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateUser))) // PATCH: Update user
+	http.Handle("/users/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteUser))) // DELETE: Delete user
 
-	http.Handle("/invitations/all", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllInvitations))))   // GET: All invitations
-	http.Handle("/invitations/create", auth.CORSMiddleware(auth.VerifyingMiddleware(http.HandlerFunc(api.CreateInvitation)))) // POST: Create invitation
+	http.Handle("/invitations/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllInvitations)))   // GET: All invitations
+	http.Handle("/invitations/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateInvitation))) // POST: Create invitation
 
 	server := &http.Server{
 		Addr:         ":8080",
