@@ -6,6 +6,8 @@ import (
 	"samla-admin/clerk"
 )
 
+// =============================== ORGANIZATIONS ===============================
+
 func GetAllOrganizations(w http.ResponseWriter, r *http.Request) {
 	if !VerifyMethod(r, []string{"GET"}) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -89,4 +91,90 @@ func DeleteOrganization(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(map[string]string{"message": "Organization " + organizationId + " deleted successfully"})
+}
+
+// =============================== USERS ===============================
+
+func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"GET"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	users, err := clerk.GetAllUsers()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(users)
+}
+
+func CreateUser(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"POST"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	user, err := ExtractUserCreateRequest(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	createdUser, err := clerk.CreateUser(&user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(createdUser)
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"PATCH"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, err := ExtractUserId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	updateRequest, err := ExtractUserUpdateRequest(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	updatedUser, err := clerk.UpdateUser(userId, &updateRequest)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(updatedUser)
+}
+
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"DELETE"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, err := ExtractUserId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	resource, err := clerk.DeleteUser(userId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(resource)
 }

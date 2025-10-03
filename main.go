@@ -17,6 +17,11 @@ func main() {
 	http.Handle("/organizations/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateOrganization))) // PATCH: Update organization
 	http.Handle("/organizations/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteOrganization))) // DELETE: Delete organization
 
+	http.Handle("/users/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllUsers)))   // GET: All users
+	http.Handle("/users/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateUser))) // POST: Create user
+	http.Handle("/users/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateUser))) // PATCH: Update user
+	http.Handle("/users/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteUser))) // DELETE: Delete user
+
 	server := &http.Server{
 		Addr:         ":8080",
 		Handler:      http.DefaultServeMux,
