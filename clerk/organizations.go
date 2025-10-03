@@ -21,34 +21,13 @@ func init() {
 	clerk.SetKey(os.Getenv("CLERK_SECRET_KEY"))
 }
 
-func GetAllOrganizations() ([]clerk.Organization, error) {
-	var allOrgIDs []clerk.Organization
-	limit := int64(100)
-	offset := int64(0)
-
-	for {
-		resp, err := organization.List(context.Background(), &organization.ListParams{
-			ListParams: clerk.ListParams{
-				Limit:  &limit,
-				Offset: &offset,
-			},
-		})
-
-		if err != nil {
-			return nil, err
-		}
-
-		for _, org := range resp.Organizations {
-			allOrgIDs = append(allOrgIDs, *org)
-		}
-
-		if int64(len(resp.Organizations)) < limit {
-			break
-		}
-		offset += limit
+func GetAllOrganizations() (*clerk.OrganizationList, error) {
+	organizations, err := organization.List(context.Background(), &organization.ListParams{})
+	if err != nil {
+		return nil, err
 	}
 
-	return allOrgIDs, nil
+	return organizations, nil
 }
 
 func GetUserOrganizations(userId string) (*clerk.OrganizationMembershipList, error) {
