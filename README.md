@@ -161,6 +161,41 @@ Deletes an organization.
 }
 ```
 
+#### GET /organizations/users
+
+Retrieves all users for an organization
+
+**Query Parameters:**
+- organization_id: The ID of the organization to delete
+
+**Response:**
+
+```json
+{
+    "data" : [
+        {
+            "object": "user",
+            "id": "user_123",
+            "first_name": "John",
+            "last_name": "Doe",
+            "email_addresses": [ 
+                "email_address": "john.doe@example.com"
+            ],
+            "username": "john.doe",
+            "profile_image_url": "",
+            "has_image": true,
+            "public_metadata": {},
+            "private_metadata": {},
+            "created_by": "user_1234",
+            "created_at": 1754520218386,
+            "updated_at": 1754520219401,
+        }
+    ],
+    "total_count" : 1
+}
+```
+
+
 ### Users
 
 #### Get /users/all
@@ -195,6 +230,7 @@ Returns all users.
     "total_count": 1
 }
 ```
+
 #### Get /users/get
 
 Returns a user.

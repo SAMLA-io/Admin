@@ -12,10 +12,11 @@ import (
 func main() {
 	http.HandleFunc("/", welcome)
 
-	http.Handle("/organizations/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllOrganizations)))   // GET: All organizations
-	http.Handle("/organizations/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateOrganization))) // POST: Create organization
-	http.Handle("/organizations/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateOrganization))) // PATCH: Update organization
-	http.Handle("/organizations/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteOrganization))) // DELETE: Delete rganization
+	http.Handle("/organizations/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllOrganizations)))    // GET: All organizations
+	http.Handle("/organizations/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateOrganization)))  // POST: Create organization
+	http.Handle("/organizations/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateOrganization)))  // PATCH: Update organization
+	http.Handle("/organizations/delete", auth.VerifyingMiddleware(http.HandlerFunc(api.DeleteOrganization)))  // DELETE: Delete rganization
+	http.Handle("/organizations/users", auth.VerifyingMiddleware(http.HandlerFunc(api.GetOrganizationUsers))) // GET: Get organization users
 
 	http.Handle("/users/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllUsers)))   // GET: All users
 	http.Handle("/users/get", auth.VerifyingMiddleware(http.HandlerFunc(api.GetUser)))       // GET: Get user

@@ -93,6 +93,27 @@ func DeleteOrganization(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Organization " + organizationId + " deleted successfully"})
 }
 
+func GetOrganizationUsers(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"GET"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	organizationId, err := ExtractOrganizationId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	users, err := clerk.GetOrganizationUsers(organizationId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(users)
+}
+
 // =============================== USERS ===============================
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {

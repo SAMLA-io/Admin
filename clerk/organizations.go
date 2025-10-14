@@ -30,6 +30,16 @@ func GetAllOrganizations() (*clerk.OrganizationList, error) {
 	return organizations, nil
 }
 
+func GetOrganizationUsers(organizationId string) (*clerk.UserList, error) {
+	users, err := user.List(context.Background(), &user.ListParams{
+		OrganizationIDs: []string{organizationId},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
 func GetUserOrganizations(userId string) (*clerk.OrganizationMembershipList, error) {
 	orgMemberships, err := user.ListOrganizationMemberships(context.Background(), userId, &user.ListOrganizationMembershipsParams{})
 
