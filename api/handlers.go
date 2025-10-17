@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"samla-admin/clerk"
-	"samla-admin/sarah"
+	sarahMongodb "samla-admin/sarah/mongodb"
+	sarahVapi "samla-admin/sarah/vapi"
 )
 
 // =============================== ORGANIZATIONS ===============================
@@ -260,6 +261,8 @@ func CreateInvitation(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(invitation)
 }
 
+// =============================== SARAH ===============================
+
 func GetOrganizationAssistants(w http.ResponseWriter, r *http.Request) {
 	if !VerifyMethod(r, []string{"GET"}) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -272,7 +275,7 @@ func GetOrganizationAssistants(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	assistants, err := sarah.GetOrganizationAssistants(orgID)
+	assistants, err := sarahMongodb.GetOrganizationAssistants(orgID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -280,4 +283,31 @@ func GetOrganizationAssistants(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(assistants)
+}
+
+func CreateAssistant(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"POST"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	orgID, err := ExtractOrganizationId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	assistantDto := ExtractAssistantCreateDto(r)
+	if assistantDto == nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	assistant, err := sarahVapi.CreateAssistant(orgID, assistantDto)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(assistant)
 }

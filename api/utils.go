@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	vapiApi "github.com/VapiAI/server-sdk-go"
 	"github.com/clerk/clerk-sdk-go/v2/organization"
 	"github.com/clerk/clerk-sdk-go/v2/user"
 )
@@ -89,4 +90,26 @@ func ExtractUserUpdateRequest(r *http.Request) (user.UpdateParams, error) {
 		return updateRequest, err
 	}
 	return updateRequest, nil
+}
+
+func ExtractAssistantCreateDto(r *http.Request) *vapiApi.CreateAssistantDto {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		return nil
+	}
+
+	if len(body) == 0 {
+		return nil
+	}
+
+	var requestBody struct {
+		AssistantCreateRequest vapiApi.CreateAssistantDto `json:"assistantCreateRequest"`
+	}
+
+	err = json.Unmarshal(body, &requestBody)
+	if err != nil {
+		return nil
+	}
+
+	return &requestBody.AssistantCreateRequest
 }

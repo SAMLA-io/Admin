@@ -33,6 +33,7 @@ func init() {
 		panic(err)
 	}
 	log.Println("Pinged deployment. Successfully connected to MongoDB!")
+
 }
 
 func GetOrganizationAssistants(orgId string) ([]mongodb.Assistant, error) {
@@ -51,4 +52,16 @@ func GetOrganizationAssistants(orgId string) ([]mongodb.Assistant, error) {
 	}
 
 	return assistants, nil
+}
+
+func CreateAssistant(orgId string, assistant mongodb.Assistant) (*mongo.InsertOneResult, error) {
+	coll := Client.Database(orgId).Collection(os.Getenv("MONGO_COLLECTION_ASSISTANTS"))
+
+	result, err := coll.InsertOne(context.Background(), assistant)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return result, nil
 }
