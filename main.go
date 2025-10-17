@@ -12,6 +12,8 @@ import (
 func main() {
 	http.HandleFunc("/", welcome)
 
+	/* General ADMIN Endpoints */
+
 	http.Handle("/organizations/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllOrganizations)))    // GET: All organizations
 	http.Handle("/organizations/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateOrganization)))  // POST: Create organization
 	http.Handle("/organizations/update", auth.VerifyingMiddleware(http.HandlerFunc(api.UpdateOrganization)))  // PATCH: Update organization
@@ -26,6 +28,9 @@ func main() {
 
 	http.Handle("/invitations/all", auth.VerifyingMiddleware(http.HandlerFunc(api.GetAllInvitations)))   // GET: All invitations
 	http.Handle("/invitations/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateInvitation))) // POST: Create invitation
+
+	/* Sarah Admin Endpoints */
+	http.Handle("/sarah/assistants/organization", auth.VerifyingMiddleware(http.HandlerFunc(api.GetOrganizationAssistants))) // GET: Get organization assistants
 
 	server := &http.Server{
 		Addr:         ":8080",

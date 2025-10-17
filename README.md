@@ -424,6 +424,34 @@ Creates a new invitation.
 }
 ```
 
+### Sarah
+
+All endpoints for Sarah are under the `/sarah` endpoint.s
+
+#### Organizations
+
+##### GET /assistants/organizations
+
+Retrieve all assistants for an organization.
+
+**Headers:**
+- `Authorization: Bearer <clerk_jwt_token>` (required)
+
+**Query Parameters:**
+- organization_id: The ID of the organization to delete
+
+**Response:**
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439011",
+    "name": "Insurance Reminder Assistant",
+    "vapi_assistant_id": "asst_1234567890abcdef",
+    "type": "insurance"
+  }
+]
+```
+
 
 ## License
 

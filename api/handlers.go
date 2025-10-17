@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"samla-admin/clerk"
+	"samla-admin/sarah"
 )
 
 // =============================== ORGANIZATIONS ===============================
@@ -257,4 +258,26 @@ func CreateInvitation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(invitation)
+}
+
+func GetOrganizationAssistants(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"GET"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	orgID, err := ExtractOrganizationId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	assistants, err := sarah.GetOrganizationAssistants(orgID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(assistants)
 }
