@@ -31,6 +31,7 @@ func main() {
 
 	/* Sarah Admin Endpoints */
 	http.Handle("/sarah/assistants/organization", auth.VerifyingMiddleware(http.HandlerFunc(api.GetOrganizationAssistants))) // GET: Get organization assistants
+	http.Handle("/sarah/assistants/create", auth.VerifyingMiddleware(http.HandlerFunc(api.CreateAssistant)))                 // POST: Create assistant
 
 	server := &http.Server{
 		Addr:         ":8080",

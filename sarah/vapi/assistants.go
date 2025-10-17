@@ -21,7 +21,7 @@ import (
 
 var VapiClient *vapiclient.Client
 
-func inti() {
+func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Printf("[SARAH] WARNING: .env file not found, using system environment variables")
 	}
