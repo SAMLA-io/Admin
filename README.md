@@ -452,6 +452,210 @@ Retrieve all assistants for an organization.
 ]
 ```
 
+#### POST /assistants/create
+
+Create a new assistant.
+
+**Headers:**
+- `Authorization: Bearer <clerk_jwt_token>` (required)
+
+**Request Body:**
+
+Note: Not all fields are required to be passed. This object is the same as the VapiAI Assistant Object, which is also the same in the update endpoint.
+
+```json
+{
+  "assistantUpdateRequest": {
+    "transcriber": {
+        "model": "nova-2",
+        "language": "es",
+        "numerals": false,
+        "confidenceThreshold": 0.4,
+        "endpointing": 300,
+        "provider": "deepgram"
+    },
+    "model": {
+        "messages": [
+            {
+                "content": "",
+                "role": "system"
+            }
+        ],
+        "model": "gpt-5",
+        "temperature": 1,
+        "provider": "openai"
+    },
+    "voice": {
+        "voiceId": "",
+        "stability": 0.5,
+        "similarityBoost": 0.75,
+        "model": "",
+        "provider": ""
+    },
+    "firstMessage": "",
+    "clientMessages": [
+        "conversation-update",
+        "function-call",
+        "hang",
+        "model-output",
+        "speech-update",
+        "status-update",
+        "transfer-update",
+        "transcript",
+        "tool-calls",
+        "user-interrupted",
+        "voice-input",
+        "workflow.node.started"
+    ],
+    "serverMessages": [
+        "conversation-update",
+        "end-of-call-report",
+        "function-call",
+        "hang",
+        "speech-update",
+        "status-update",
+        "tool-calls",
+        "transfer-destination-request",
+        "user-interrupted"
+    ],
+    "backgroundDenoisingEnabled": true,
+    "name": "",
+    "voicemailMessage": "",
+    "endCallMessage": "",
+    "analysisPlan": {
+        "summaryPlan": {
+            "messages": [
+                {
+                    "content": "",
+                    "role": "system"
+                },
+                {
+                    "content": "",
+                    "role": "user"
+                }
+            ]
+        },
+        "structuredDataPlan": {
+            "messages": [
+                {
+                    "content": "",
+                    "role": "system"
+                },
+                {
+                    "content": "",
+                    "role": "user"
+                }
+            ],
+            "enabled": true,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "Categoria": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "phonenumber": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name",
+                    "Categoria"
+                ]
+            }
+        },
+        "successEvaluationPlan": {
+            "rubric": "PercentageScale",
+            "messages": [
+                {
+                    "content": "",
+                    "role": "system"
+                },
+                {
+                    "content": "",
+                    "role": "user"
+                }
+            ]
+        }
+    },
+    "artifactPlan": {
+        "recordingFormat": "mp3"
+    },
+    "startSpeakingPlan": {
+        "waitSeconds": 0.4,
+        "smartEndpointingEnabled": "livekit",
+        "transcriptionEndpointingPlan": {
+            "onPunctuationSeconds": 0.1,
+            "onNoPunctuationSeconds": 1.5,
+            "onNumberSeconds": 0.5
+        }
+    },
+    "id": "689eadfb-5f57-4b45-a7b1-7b37fa5baaf8",
+    "orgId": "7331923f-e36c-4bb9-938d-9a6c651a2f49",
+    "createdAt": "2025-09-05T17:10:33Z",
+    "updatedAt": "2025-09-25T20:14:21Z"    
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "InsertedID": "507f1f77bcf86cd799439011",
+  "Acknowledged": true
+}
+```
+
+#### POST /assistants/register
+Register an assistant in the database. This is useful when an assistant is already created in VapiAI and needs to be registered in the database manually.
+
+This endpoint will not create the assistant in VapiAI, it will only register the assistant in the database IF it exists in VapiAI.
+
+**Headers:**
+- `Authorization: Bearer <clerk_jwt_token>` (required)
+
+**Request Body:**
+
+```json
+{
+  "assistant": {
+    "name": "foo",
+    "vapiAssistantId": "foo",
+    "type": "foo"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "InsertedID": "507f1f77bcf86cd799439011",
+  "Acknowledged": true
+}
+```
+
+#### DELETE /assistants/delete
+Deletes an assistant.
+
+**Headers:**
+- `Authorization: Bearer <clerk_jwt_token>` (required)
+
+**Query Parameters:**
+- `assistantId`: The VapiAI assistant ID to delete (required)
+
+**Response:**
+
+```json
+{
+  "acknowledged": true,
+  "deletedCount": 1
+}
+```
+
 
 ## License
 

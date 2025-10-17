@@ -2,13 +2,9 @@ package vapi
 
 import (
 	"context"
-	"errors"
 	"log"
-	"net/http"
 	"os"
-	"time"
 
-	"github.com/VapiAI/server-sdk-go/option"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 
@@ -38,25 +34,8 @@ func init() {
 	}
 }
 
-// ensureVapiClient checks if VapiClient is properly initialized
-func ensureVapiClient() error {
-	if VapiClient == nil {
-		return errors.New("VapiClient is not initialized - check VAPI_API_KEY environment variable")
-	}
-	return nil
-}
-
-func CreateClient(apiKey string) *vapiclient.Client {
-	return vapiclient.NewClient(
-		option.WithToken(apiKey),
-		option.WithHTTPClient(
-			&http.Client{
-				Timeout: 30 * time.Second,
-			}),
-	)
-}
 func CreateAssistant(orgId string, assistantCreateDto *vapiApi.CreateAssistantDto) (*mongo.InsertOneResult, error) {
-	if err := ensureVapiClient(); err != nil {
+	if err := EnsureVapiClient(); err != nil {
 		return nil, err
 	}
 
@@ -78,4 +57,56 @@ func CreateAssistant(orgId string, assistantCreateDto *vapiApi.CreateAssistantDt
 	}
 
 	return result, nil
+}
+
+func UpdateAssistant(assistantId string, assistantUpdateDto vapiApi.UpdateAssistantDto) (*vapiApi.Assistant, error) {
+	if err := EnsureVapiClient(); err != nil {
+		return nil, err
+	}
+
+	result, err := VapiClient.Assistants.Update(context.Background(), assistantId, &assistantUpdateDto)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func DeleteAssistant(orgId string, assistantId string) (*mongo.DeleteResult, error) {
+	if err := EnsureVapiClient(); err != nil {
+		return nil, err
+	}
+
+	_, err := VapiClient.Assistants.Delete(context.Background(), assistantId)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	result, err := mongodb.DeleteAssistant(orgId, assistantId)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func ExistsAssistant(assistantId string) bool {
+	if err := EnsureVapiClient(); err != nil {
+		log.Printf("ExistsAssistant: VapiClient not initialized: %v", err)
+		return false
+	}
+
+	log.Printf("ExistsAssistant: Checking existence of assistant with ID: %s", assistantId)
+	assistant, err := VapiClient.Assistants.Get(context.Background(), assistantId)
+	if err != nil {
+		log.Printf("ExistsAssistant: Error fetching assistant with ID %s: %v", assistantId, err)
+		return false
+	}
+
+	exists := assistant != nil && assistant.Id != ""
+	log.Printf("ExistsAssistant: Assistant with ID %s exists: %v", assistantId, exists)
+	return exists
 }

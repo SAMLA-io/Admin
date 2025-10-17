@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"samla-admin/types/mongodb"
 	"strings"
 
 	vapiApi "github.com/VapiAI/server-sdk-go"
@@ -112,4 +113,30 @@ func ExtractAssistantCreateDto(r *http.Request) *vapiApi.CreateAssistantDto {
 	}
 
 	return &requestBody.AssistantCreateRequest
+}
+
+func ExtractAssistantRegisterRequest(r *http.Request) *mongodb.Assistant {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		return nil
+	}
+
+	var requestBody struct {
+		AssistantRegisterRequest mongodb.Assistant `json:"assistantRegisterRequest"`
+	}
+
+	err = json.Unmarshal(body, &requestBody)
+	if err != nil {
+		return nil
+	}
+
+	return &requestBody.AssistantRegisterRequest
+}
+
+func ExtractAssistantId(r *http.Request) (string, error) {
+	assistantId := r.URL.Query().Get("assistant_id")
+	if assistantId == "" {
+		return "", errors.New("assistant_id is required")
+	}
+	return strings.TrimSpace(assistantId), nil
 }

@@ -65,3 +65,15 @@ func CreateAssistant(orgId string, assistant mongodb.Assistant) (*mongo.InsertOn
 
 	return result, nil
 }
+
+func DeleteAssistant(orgId string, assistantId string) (*mongo.DeleteResult, error) {
+	coll := Client.Database(orgId).Collection(os.Getenv("MONGO_COLLECTION_ASSISTANTS"))
+
+	result, err := coll.DeleteOne(context.Background(), bson.M{"vapi_assistant_id": assistantId})
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return result, nil
+}

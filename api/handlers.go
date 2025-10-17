@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"samla-admin/clerk"
 	sarahMongodb "samla-admin/sarah/mongodb"
@@ -310,4 +311,73 @@ func CreateAssistant(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(assistant)
+}
+
+func RegisterAssistant(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"POST"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	assistant := ExtractAssistantRegisterRequest(r)
+	orgId, err := ExtractOrganizationId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if assistant == nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("RegisterAssistant: Checking existence of assistant with ID: %s", assistant.VapiAssistantId)
+
+	if !sarahVapi.ExistsAssistant(assistant.VapiAssistantId) {
+		http.Error(w, "Assistant does not exist in VapiAI", http.StatusBadRequest)
+		return
+	}
+
+	result, err := sarahMongodb.CreateAssistant(orgId, *assistant)
+
+	if err != nil {
+		http.Error(w, "Failed to register assistant", http.StatusInternalServerError)
+		return
+	}
+
+	if result == nil {
+		http.Error(w, "Failed to register assistant", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
+}
+
+func DeleteAssistant(w http.ResponseWriter, r *http.Request) {
+	if !VerifyMethod(r, []string{"DELETE"}) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	orgId, err := ExtractOrganizationId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	assistantId, err := ExtractAssistantId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	result, err := sarahVapi.DeleteAssistant(orgId, assistantId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
 }
